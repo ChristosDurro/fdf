@@ -6,20 +6,19 @@
 /*   By: cdurro <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 09:56:13 by cdurro            #+#    #+#             */
-/*   Updated: 2023/07/10 13:55:40 by cdurro           ###   ########.fr       */
+/*   Updated: 2023/07/12 13:16:40 by cdurro           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"fdf.h"
-
+#include "fdf.h"
 
 int	get_width(char *file_name)
 {
-	int fd;
-	int	columns;
-	char *line;
-	char **nums;
-	
+	int		fd;
+	int		columns;
+	char	*line;
+	char	**nums;
+
 	fd = open(file_name, O_RDONLY);
 	if (fd == -1)
 		return (1);
@@ -28,7 +27,7 @@ int	get_width(char *file_name)
 	columns = 0;
 	while (nums[columns])
 	{
-		// free(nums[columns]);
+		free(nums[columns]);
 		columns++;
 	}
 	close(fd);
@@ -39,8 +38,8 @@ int	get_width(char *file_name)
 
 int	get_height(char *file_name)
 {
-	int	fd;
-	int	rows;
+	int		fd;
+	int		rows;
 	char	*line;
 
 	fd = open(file_name, O_RDONLY);
@@ -60,43 +59,45 @@ int	get_height(char *file_name)
 
 static t_point	point_init(int x, int y, char **num)
 {
-	t_point point;
+	t_point	point;
 
 	point.x = x;
 	point.y = y;
 	point.z = ft_atoi(num[0]);
 	if (num[1] != NULL)
+	{
 		point.color = ft_strtol(num[1]) << 8 | 0xff;
+		free(num[1]);
+	}
 	else
 		point.color = -1;
+	free(num[0]);
 	free(num);
 	return (point);
 }
 
 void	fill_matrix(char *file_name, t_map *map)
 {
-	int	x;	
-	int	y;
-	int	fd;
+	int		x;	
+	int		y;
+	int		fd;
 	char	*line;
 	char	**nums;
-	
+
 	fd = open(file_name, O_RDONLY);
 	if (fd == -1)
 		return ;
-
 	line = get_next_line(fd);
-	y = 0;
+	y = -1;
 	while (line)
 	{
 		nums = ft_split(line, ' ');
-		x = 0;
-		while (x < map->width)
+		x = -1;
+		while (++x < map->width)
 		{
-			map->points[y][x] = point_init(x, y, ft_split(nums[x], ','));
-			x++;
+			map->points[++y][x] = point_init(x, y, ft_split(nums[x], ','));
+			free(nums[x]);
 		}
-		y++;
 		free(line);
 		free(nums);
 		line = get_next_line(fd);
@@ -105,7 +106,7 @@ void	fill_matrix(char *file_name, t_map *map)
 
 void	read_file(t_map *map, char *file_name)
 {
-	int fd;
+	int	fd;
 	int	i;
 
 	map->width = get_width(file_name);
@@ -116,7 +117,7 @@ void	read_file(t_map *map, char *file_name)
 		map->points[i] = malloc(sizeof(t_point) * (map->width));
 	fd = open(file_name, O_RDONLY);
 	if (fd == -1)
-		return ;
+		exit(EXIT_FAILURE);
 	fill_matrix(file_name, map);
 	close(fd);
 }

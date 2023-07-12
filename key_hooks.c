@@ -6,52 +6,42 @@
 /*   By: cdurro <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:30:37 by cdurro            #+#    #+#             */
-/*   Updated: 2023/07/10 10:59:44 by cdurro           ###   ########.fr       */
+/*   Updated: 2023/07/12 11:26:00 by cdurro           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-
 void	translate(mlx_key_data_t keydata, t_map *map)
 {
-	if (keydata.key == MLX_KEY_UP && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_UP))
 		map->shift_y -= 10;
-	if (keydata.key == MLX_KEY_DOWN && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_DOWN))
 		map->shift_y += 10;
-	if (keydata.key == MLX_KEY_LEFT && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_LEFT))
 		map->shift_x -= 10;
-	if (keydata.key == MLX_KEY_RIGHT && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_RIGHT))
 		map->shift_x += 10;
 }
 
-void	zoom(mlx_key_data_t keydata, t_map *map)
-{
-	
-	if (keydata.key == MLX_KEY_EQUAL && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
-		map->zoom += 1.25;
-	if (keydata.key == MLX_KEY_MINUS && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
-		map->zoom -= 1.25;
-}
-
 void	double_rotation(mlx_key_data_t keydata, t_map *map)
-{	
-	if (keydata.key == MLX_KEY_KP_7 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+{
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_7))
 	{
 		map->angles.a += 5 * ONE_DEGREE;
 		map->angles.b -= 5 * ONE_DEGREE;
 	}
-	if (keydata.key == MLX_KEY_KP_9 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_9))
 	{
 		map->angles.a += 5 * ONE_DEGREE;
 		map->angles.b += 5 * ONE_DEGREE;
 	}
-	if (keydata.key == MLX_KEY_KP_1 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_1))
 	{
 		map->angles.a -= 5 * ONE_DEGREE;
 		map->angles.b -= 5 * ONE_DEGREE;
 	}
-	if (keydata.key == MLX_KEY_KP_3 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_3))
 	{
 		map->angles.a -= 5 * ONE_DEGREE;
 		map->angles.b += 5 * ONE_DEGREE;
@@ -60,37 +50,37 @@ void	double_rotation(mlx_key_data_t keydata, t_map *map)
 
 void	rotation(mlx_key_data_t keydata, t_map *map)
 {
-
-	if (keydata.key == MLX_KEY_KP_8 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_8))
 		map->angles.a += 5 * ONE_DEGREE;
-	if (keydata.key == MLX_KEY_KP_2 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_2))
 		map->angles.a -= 5 * ONE_DEGREE;
-	if (keydata.key == MLX_KEY_KP_4 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_4))
 		map->angles.b -= 5 * ONE_DEGREE;
-	if (keydata.key == MLX_KEY_KP_6 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_6))
 		map->angles.b += 5 * ONE_DEGREE;
-	if (keydata.key == MLX_KEY_KP_MULTIPLY && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_MULTIPLY))
 		map->angles.c -= 5 * ONE_DEGREE;
-	if (keydata.key == MLX_KEY_KP_DIVIDE && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_DIVIDE))
 		map->angles.c += 5 * ONE_DEGREE;
 }
 
 void	rest(mlx_key_data_t keydata, t_map *map)
 {
-	if (keydata.key == MLX_KEY_KP_SUBTRACT && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_SUBTRACT))
 		map->shift_z -= 1;
-	if (keydata.key == MLX_KEY_KP_ADD && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_KP_ADD))
 		map->shift_z += 1;
-	if (keydata.key == MLX_KEY_1 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_1))
 		map->view = 0;
-	if (keydata.key == MLX_KEY_2 && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_2))
 		map->view = 1;
-	if (keydata.key == MLX_KEY_R && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_R))
 		reset_map(map);
-	if (keydata.key == MLX_KEY_ESCAPE && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(map->window, MLX_KEY_C))
+		map->color_theme += 1;
+	if (mlx_is_key_down(map->window, MLX_KEY_ESCAPE))
 	{
 		free_all(map);
-		exit(0);
+		exit(1);
 	}
 }
-

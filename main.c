@@ -6,22 +6,34 @@
 /*   By: cdurro <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 15:04:21 by cdurro            #+#    #+#             */
-/*   Updated: 2023/07/10 13:36:54 by cdurro           ###   ########.fr       */
+/*   Updated: 2023/07/12 13:07:56 by cdurro           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"fdf.h"
+#include "fdf.h"
 
 void	handle_key_is_down(mlx_key_data_t keydata, void *param)
 {
-	t_map *map = (t_map *)param;
+	t_map	*map;
 
+	map = (t_map *)param;
 	translate(keydata, map);
-	zoom(keydata, map);
 	rotation(keydata, map);
 	double_rotation(keydata, map);
 	rest(keydata, map);
-	draw(map);
+	update_map(map);
+}
+
+void	handle_scroll(double x, double y, void *param)
+{
+	t_map	*map;
+
+	map = (t_map *)param;
+	if (y > 0)
+		map->zoom += 1.25;
+	else
+		map->zoom -= 1.25;
+	update_map(map);
 }
 
 int	close_window(t_map *map)
@@ -49,9 +61,9 @@ void	ft_print_map(t_map map)
 	printf("Height: %d\n", map.height);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_map *map;
+	t_map	*map;
 
 	map = malloc(sizeof(t_map));
 	if (!map)
@@ -65,8 +77,10 @@ int main(int argc, char **argv)
 			map->zoom = 1.562500;
 		else
 			map->zoom = 20.0;
+		map->img = mlx_new_image(map->window, WIDTH, HEIGHT);
 		draw(map);
 		mlx_key_hook(map->window, &handle_key_is_down, map);
+		mlx_scroll_hook(map->window, &handle_scroll, map);
 		mlx_loop(map->window);
 	}
 	return (0);
